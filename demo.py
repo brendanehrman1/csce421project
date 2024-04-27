@@ -52,7 +52,7 @@ def main_worker():
 
     import medmnist 
     from medmnist import INFO, Evaluator
-    root = '/scratch/group/optmai/zhishguo/med/'
+    root = 'data/'
     info = INFO[args.data]
     DataClass = getattr(medmnist, info['python_class'])
     test_dataset = DataClass(split='test', download=True, root=root)
