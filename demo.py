@@ -10,13 +10,6 @@ torch.backends.cudnn.benchmark=False
 torch.manual_seed(2024)
 np.random.seed(2024)
 
-if args.server == "grace":
-    os.environ['http_proxy'] = '10.73.132.63:8080'
-    os.environ['https_proxy'] = '10.73.132.63:8080'
-elif args.server == "faster":
-    os.environ['http_proxy'] = '10.72.8.25:8080'
-    os.environ['https_proxy'] = '10.72.8.25:8080'
-
 class dataset(torch.utils.data.Dataset):
     def __init__(self, inputs, targets, trans=None):
         self.x = inputs
@@ -105,6 +98,7 @@ def main_worker():
      
     if 1 != args.eval_only:
         train(net, train_loader, test_loader, loss_fn, optimizer, epochs=args.epochs)
+        torch.save(net.state_dict(), "saved_model/CE_model")
     
     # to save a checkpoint in training: torch.save(net.state_dict(), "saved_model/test_model") 
     if 1 == args.eval_only: 
@@ -128,7 +122,8 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-        evaluate(net, test_loader, epoch=e)  
+        evaluate(net, test_loader, epoch=e)
+    
   
 def evaluate(net, test_loader, epoch=-1):
     # Testing AUC
