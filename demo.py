@@ -98,7 +98,7 @@ def main_worker():
      
     if 1 != args.eval_only:
         train(net, train_loader, test_loader, loss_fn, optimizer, epochs=args.epochs)
-        torch.save(net.state_dict(), "saved_model/CE_model")
+        torch.save(net.state_dict(), "saved_model/AUCM_model")
     
     # to save a checkpoint in training: torch.save(net.state_dict(), "saved_model/test_model") 
     if 1 == args.eval_only: 
