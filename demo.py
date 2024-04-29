@@ -94,14 +94,45 @@ def main_worker():
           num_workers=0)
 
     from libauc.models import resnet18, resnet101, resnet152, resnet50, densenet121, densenet169, densenet201, densenet161, resnext101_32x8d, resnext50_32x4d, wide_resnet101_2, wide_resnet50_2
-    from libauc.losses import AUCMLoss
-    from torch.nn import BCELoss
+    from libauc.losses import AUCMLoss, CompositionalAUCLoss, AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss, PairwiseAUCLoss, meanAveragePrecisionLoss, ListwiseCELoss, NDCGLoss, GCLoss_v1, GCLoss_v2, MIDAM_attention_pooling_loss, MIDAM_softmax_pooling_loss, CrossEntropyLoss, FocalLoss, barrier_hinge_loss, hinge_loss, logistic_loss, squared_hinge_loss, squared_loss
     from torch.optim import SGD
     from libauc.optimizers import PESG
 
+    if args.loss == 'CE' and args.optimizer == 'PESG':
+      raise ValueError("Incompatible: CE and PESG")
+
     loss_fns = {
-        "CE": BCELoss(),
         "AUCM": AUCMLoss(),
+        "CompositionalAUC": CompositionalAUCLoss(),
+        "AveragePrecision": AveragePrecisionLoss(),
+        "pAUC_CVaR": pAUC_CVaR_Loss(),
+        "pAUC_DRO": pAUC_DRO_Loss(),
+        "tpAUC_KL": tpAUC_KL_Loss(),
+        "PairwiseAUC": PairwiseAUCLoss(),
+        "meanAveragePrecision": meanAveragePrecisionLoss(),
+        "ListwiseCE": ListwiseCELoss(),
+        "NDCG": NDCGLoss(),
+        "GC": GCLoss_v1(),
+        "GC_v2": GCLoss_v2(),
+        "MIDAM_attention_pooling": MIDAM_attention_pooling_loss(),
+        "MIDAM_softmax_pooling": MIDAM_softmax_pooling_loss(),
+        "CE": CrossEntropyLoss(),
+        "Focal": FocalLoss(),
+        "barrier_hinge": barrier_hinge_loss(),
+        "hinge": hinge_loss(),
+        "logistic": logistic_loss(),
+        "squared_hinge": squared_hinge_loss(),
+        "squared": squared_loss(),
+    }
+
+    optimizers = {
+        "SGD":
+        SGD(net.parameters(), lr=args.lr),
+        "PESG":
+        PESG(net.parameters(),
+             loss_fn=loss_fns[args.loss],
+             lr=args.lr,
+             margin=args.margin),
     }
 
     nns = {
@@ -120,17 +151,6 @@ def main_worker():
     }
     net = nns[args.nns]
     loss_fn = loss_fns[args.loss]
-
-    optimizers = {
-        "SGD":
-        SGD(net.parameters(), lr=args.lr),
-        "PESG":
-        PESG(net.parameters(),
-             loss_fn=loss_fns[args.loss],
-             lr=args.lr,
-             margin=args.margin),
-    }
-    
     optimizer = optimizers[args.optimizer]
 
     if not args.eval_only:
