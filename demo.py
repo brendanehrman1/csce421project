@@ -93,7 +93,7 @@ def main_worker():
           shuffle=True,
           num_workers=0)
 
-    from libauc.models import resnet18 as ResNet18, ResNet101, ResNet152, ResNet50, DenseNet121, DenseNet169, DenseNet201, DenseNet161, ResNext101_32x8d, ResNext50_32x4d, Wide_ResNet101_2, Wide_ResNet50_2
+    from libauc.models import resnet18, resnet101, resnet152, resnet50, densenet121, densenet169, densenet201, densenet161, resnext101_32x8d, resnext50_32x4d, wide_resnet101_2, wide_resnet50_2
     from libauc.losses import AUCMLoss
     from torch.nn import BCELoss
     from torch.optim import SGD
@@ -115,18 +115,18 @@ def main_worker():
     }
 
     nns = {
-        "resnet18": ResNet18(pretrained=False).cuda(),
-        "resnet101": ResNet101(pretrained=False).cuda(),
-        "resnet152": ResNet152(pretrained=False).cuda(),
-        "resnet50": ResNet50(pretrained=False).cuda(),
-        "densenet121": DenseNet121(pretrained=False).cuda(),
-        "densenet169": DenseNet169(pretrained=False).cuda(),
-        "densenet201": DenseNet201(pretrained=False).cuda(),
-        "densenet161": DenseNet161(pretrained=False).cuda(),
-        "resnext101_32x8d": ResNext101_32x8d(pretrained=False).cuda(),
-        "resnext50_32x4d": ResNext50_32x4d(pretrained=False).cuda(),
-        "wide_resnet101_2": Wide_ResNet101_2(pretrained=False).cuda(),
-        "wide_resnet50_2": Wide_ResNet50_2(pretrained=False).cuda()
+        "resnet18": resnet18(pretrained=False).cuda(),
+        "resnet101": resnet101(pretrained=False).cuda(),
+        "resnet152": resnet152(pretrained=False).cuda(),
+        "resnet50": resnet50(pretrained=False).cuda(),
+        "densenet121": densenet121(pretrained=False).cuda(),
+        "densenet169": densenet169(pretrained=False).cuda(),
+        "densenet201": densenet201(pretrained=False).cuda(),
+        "densenet161": densenet161(pretrained=False).cuda(),
+        "resnext101_32x8d": resnext101_32x8d(pretrained=False).cuda(),
+        "resnext50_32x4d": resnext50_32x4d(pretrained=False).cuda(),
+        "wide_resnet101_2": wide_resnet101_2(pretrained=False).cuda(),
+        "wide_resnet50_2": wide_resnet50_2(pretrained=False).cuda()
     }
     net = nns[args.nns]
     loss_fn = loss_fns[args.loss]
