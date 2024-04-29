@@ -15,6 +15,10 @@ parser.add_argument('--data', type=str, default="breastmnist")
 parser.add_argument('--server', type=str, default="faster")
 parser.add_argument('--pos_class', type=int, default=0)
 parser.add_argument('--task_index', type=int, default=0)
+parser.add_argument('--optimizer', type=str, default="PESG")
+parser.add_argument('--nns', type=str, default="resnet18")
+parser.add_argument('--normalization', type=str, default='none')
+parser.add_argument('--train_all', type=bool, default=False)
 
 
 args = parser.parse_args()
