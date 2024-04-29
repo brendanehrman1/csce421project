@@ -119,16 +119,6 @@ def main_worker():
         "Focal": FocalLoss(),
     }
 
-    optimizers = {
-        "SGD":
-        SGD(net.parameters(), lr=args.lr),
-        "PESG":
-        PESG(net.parameters(),
-             loss_fn=loss_fns[args.loss],
-             lr=args.lr,
-             margin=args.margin),
-    }
-
     nns = {
         "resnet18": resnet18(pretrained=False).cuda(),
         "resnet101": resnet101(pretrained=False).cuda(),
@@ -145,6 +135,17 @@ def main_worker():
     }
     net = nns[args.nns]
     loss_fn = loss_fns[args.loss]
+
+    optimizers = {
+        "SGD":
+        SGD(net.parameters(), lr=args.lr),
+        "PESG":
+        PESG(net.parameters(),
+             loss_fn=loss_fns[args.loss],
+             lr=args.lr,
+             margin=args.margin),
+    }
+
     optimizer = optimizers[args.optimizer]
 
     if not args.eval_only:
