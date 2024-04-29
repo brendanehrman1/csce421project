@@ -105,7 +105,7 @@ def main_worker():
     loss_fns = {
         "AUCM": AUCMLoss(),
         "CompositionalAUC": CompositionalAUCLoss(),
-        "AveragePrecision": AveragePrecisionLoss(),
+        "AveragePrecision": AveragePrecisionLoss(len(train_data)),
         "pAUC_CVaR": pAUC_CVaR_Loss(),
         "pAUC_DRO": pAUC_DRO_Loss(),
         "tpAUC_KL": tpAUC_KL_Loss(),
