@@ -99,9 +99,6 @@ def main_worker():
     from torch.optim import SGD
     from libauc.optimizers import PESG
 
-    if args.loss == 'CE' and args.optimizer == 'PESG':
-      raise ValueError("Incompatible: CE and PESG")
-
     loss_fns = {
         "AUCM": AUCMLoss(),
         "CompositionalAUC": CompositionalAUCLoss(),
