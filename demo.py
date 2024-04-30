@@ -161,6 +161,7 @@ def main_worker():
 def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
   for e in range(epochs):
     net.train()
+    index = 0
     for data, targets in train_loader:
       #print("data[0].shape: " + str(data[0].shape))
       #exit()
@@ -171,10 +172,14 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
       #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
       #print("preds:" + str(preds), flush=True)
       #print("targets:" + str(targets), flush=True)
-      loss = loss_fn(preds, targets)
+      if args.loss == 'pAUC_CVaR':
+        loss = loss_fn(preds, targets, index)
+      else:
+        loss = loss_fn(preds, targets)
       optimizer.zero_grad()
       loss.backward()
       optimizer.step()
+      index += 1
     evaluate(net, test_loader, epoch=e)
 
 
