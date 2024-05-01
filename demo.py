@@ -94,26 +94,18 @@ def main_worker():
           num_workers=0)
 
     from libauc.models import resnet18, resnet101, resnet152, resnet50, densenet121, densenet169, densenet201, densenet161, resnext101_32x8d, resnext50_32x4d, wide_resnet101_2, wide_resnet50_2
-    from libauc.losses import AUCMLoss, CompositionalAUCLoss, AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss, PairwiseAUCLoss, meanAveragePrecisionLoss, ListwiseCELoss, NDCGLoss, GCLoss_v1, GCLoss_v2, MIDAM_attention_pooling_loss, MIDAM_softmax_pooling_loss, CrossEntropyLoss, FocalLoss
-    from libauc.losses.surrogate import barrier_hinge_loss, hinge_loss, logistic_loss, squared_hinge_loss, squared_loss
+    from libauc.losses import AUCMLoss, CompositionalAUCLoss, AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss, CrossEntropyLoss
     from torch.optim import SGD
-    from libauc.optimizers import PESG
+    from libauc.optimizers import PESG, PDSCA, SOAP, SOPA, SOPAs, SOTAs
 
     loss_fns = {
-        "AUCM": AUCMLoss(),
-        "CompositionalAUC": CompositionalAUCLoss(),
-        "AveragePrecision": AveragePrecisionLoss(len(train_labels)),
-        "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
-        "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
-        "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
-        "PairwiseAUC": PairwiseAUCLoss(),
-        "meanAveragePrecision": meanAveragePrecisionLoss(len(train_labels), 2),
-        "GC": GCLoss_v1(),
-        "GC_v2": GCLoss_v2(),
-        "MIDAM_attention_pooling": MIDAM_attention_pooling_loss(len(train_labels)),
-        "MIDAM_softmax_pooling": MIDAM_softmax_pooling_loss(len(train_labels)),
-        "CE": CrossEntropyLoss(),
-        "Focal": FocalLoss(),
+      "AUCM": AUCMLoss(),
+      "CompositionalAUC": CompositionalAUCLoss(),
+      "AveragePrecision": AveragePrecisionLoss(len(train_labels)),
+      "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
+      "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
+      "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
+      "CE": CrossEntropyLoss(),
     }
 
     nns = {
@@ -134,16 +126,49 @@ def main_worker():
     loss_fn = loss_fns[args.loss]
 
     optimizers = {
-        "SGD":
-        SGD(net.parameters(), lr=args.lr),
-        "PESG":
-        PESG(net.parameters(),
-             loss_fn=loss_fns[args.loss],
-             lr=args.lr,
-             margin=args.margin),
+        "AUCM": PESG(
+          net.parameters(),
+          loss_fn=loss_fns["AUCM"],
+          lr=args.lr,
+          margin=args.margin
+        ),
+        "CompositionalAUC": PDSCA(
+          net.parameters(),
+          loss_fn=loss_fns["CompositionalAUC"],
+          lr=args.lr,
+          margin=args.margin
+        ),
+        "AveragePrecision": SOAP(
+          net.parameters(),
+          loss_fn=loss_fns["AveragePrecision"],
+          lr=args.lr,
+          margin=args.margin
+        ),
+        "pAUC_CVaR": SOPA(
+          net.parameters(),
+          loss_fn=loss_fns["pAUC_CVaR"],
+          lr=args.lr,
+          margin=args.margin
+        ),
+        "pAUC_DRO": SOPAs(
+          net.parameters(),
+          loss_fn=loss_fns["pAUC_DRO"],
+          lr=args.lr,
+          margin=args.margin
+        ),
+        "tpAUC_KL": SOTAs(
+          net.parameters(),
+          loss_fn=loss_fns["tpAUC_KL"],
+          lr=args.lr,
+          margin=args.margin
+        ),
+        "CE": SGD(
+          net.parameters(),
+          lr=args.lr
+        ),
     }
 
-    optimizer = optimizers[args.optimizer]
+    optimizer = optimizers[args.loss]
 
     if not args.eval_only:
       train(net,
