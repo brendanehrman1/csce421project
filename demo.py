@@ -65,8 +65,7 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
       #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
       #print("preds:" + str(preds), flush=True)
       #print("targets:" + str(targets), flush=True)
-      print(loss_fn, loss_fn.__name__)
-      if loss_fn in idx_loss:
+      if loss_fn.__class__ in idx_loss:
         loss = loss_fn(preds, targets, index)
       else:
         loss = loss_fn(preds, targets)
