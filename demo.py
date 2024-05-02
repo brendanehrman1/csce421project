@@ -17,6 +17,8 @@ torch.backends.cudnn.benchmark = False
 torch.manual_seed(2024)
 np.random.seed(2024)
 
+idx_loss = [AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss]
+
 neural_network_structures = {
     "resnet18": resnet18(pretrained=False).cuda(),
     "resnet101": resnet101(pretrained=False).cuda(),
@@ -63,7 +65,11 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
       #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
       #print("preds:" + str(preds), flush=True)
       #print("targets:" + str(targets), flush=True)
-      loss = loss_fn(preds, targets)
+      print(loss_fn, loss_fn.__name__)
+      if loss_fn in idx_loss:
+        loss = loss_fn(preds, targets, index)
+      else:
+        loss = loss_fn(preds, targets)
       optimizer.zero_grad()
       loss.backward()
       optimizer.step()
@@ -155,8 +161,8 @@ def train_model(
   train_labels = get_data_labels(data, 'train')
   loss_fns = {
     "AUCM": AUCMLoss(),
-    "CompositionalAUC": CompositionalAUCLoss(),
-    "AveragePrecision": AveragePrecisionLoss(len(train_labels)),
+    "CAUC": CompositionalAUCLoss(),
+    "AP": AveragePrecisionLoss(len(train_labels)),
     "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
     "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
     "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
@@ -172,15 +178,15 @@ def train_model(
         lr=lr,
         margin=margin
       ),
-      "CompositionalAUC": PDSCA(
+      "CAUC": PDSCA(
         net.parameters(),
-        loss_fn=loss_fns["CompositionalAUC"],
+        loss_fn=loss_fns["CAUC"],
         lr=lr,
         margin=margin
       ),
-      "AveragePrecision": SOAP(
+      "AP": SOAP(
         net.parameters(),
-        loss_fn=loss_fns["AveragePrecision"],
+        loss_fn=loss_fns["AP"],
         lr=lr,
         margin=margin
       ),
