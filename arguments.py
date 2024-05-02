@@ -17,6 +17,7 @@ parser.add_argument('--task_index', type=int, default=0)
 parser.add_argument('--nns', type=str, default="resnet18")
 parser.add_argument('--normalization', type=str, default='none')
 parser.add_argument('--mode', type=int, default=False)
+parser.add_argument('--transform', type=int, default=0)
 
 
 args = parser.parse_args()

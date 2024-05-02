@@ -126,27 +126,40 @@ def get_data_loader(data, split, batchsize, transform):
       num_workers=0)
 
 def get_transform(mode):
+  mean = 0.5
+  std = 0.5
+  if mode == 1:
+    mean = 0.75
+  elif mode == 2:
+    mean = 0.25
+  elif mode == 3:
+    std = 0.75
+  elif mode == 4:
+    std == 0.25
+  
   return transforms.Compose([
       transforms.ToPILImage(),
       transforms.Grayscale(3),
       transforms.Resize((32, 32)),
       transforms.ToTensor(),
-      transforms.Normalize(0.5, 0.5),
+      transforms.Normalize(mean, std),
   ])
 
 def eval_model(
   data,
+  transform,
   nns,
   test_batchsize,
   model_path,
 ):
-  data_loader = get_data_loader(data, 'test', test_batchsize, get_transform(0))
+  data_loader = get_data_loader(data, 'test', test_batchsize, get_transform(transform))
   net = neural_network_structures[nns]
   net.load_state_dict(torch.load(model_path))
   evaluate(net, data_loader)
 
 def train_model(
   data,
+  transform,
   loss,
   nns,
   train_batchsize,
@@ -156,8 +169,8 @@ def train_model(
   margin,
   model_path,
 ):
-  test_loader = get_data_loader(data, 'test', test_batchsize, get_transform(0))
-  train_loader = get_data_loader(data, 'train', train_batchsize, get_transform(0))
+  test_loader = get_data_loader(data, 'test', test_batchsize, get_transform(transform))
+  train_loader = get_data_loader(data, 'train', train_batchsize, get_transform(transform))
   # train_labels = get_data_labels(data, 'train')
   loss_fns = {
     "AUCM": AUCMLoss(),
@@ -225,9 +238,9 @@ def train_model(
 
 def main_worker():
   if args.mode == 0:
-    train_model(args.data, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, args.saved_model_path)
+    train_model(args.data, args.transform, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, args.saved_model_path)
   elif args.mode == 1:
-    eval_model(args.data, args.nns, args.test_batchsize, args.saved_model_path)
+    eval_model(args.data, args.transform, args.nns, args.test_batchsize, args.saved_model_path)
   else:
     raise("Not implemented: Train All")
 
