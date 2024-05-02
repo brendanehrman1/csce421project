@@ -33,7 +33,7 @@ neural_network_structures = {
 }
 
 
-class dataset(torch.utils.data.Dataset):
+class DataSet(torch.utils.data.Dataset):
 
   def __init__(self, inputs, targets, trans=None):
     self.x = inputs
@@ -112,7 +112,7 @@ def get_data_loader(data, split, batchsize, transform):
   data = torch.tensor(data, dtype=torch.float32)
   labels = torch.tensor(labels)
 
-  dataset = dataset(data, labels, trans=transform)
+  dataset = DataSet(data, labels, trans=transform)
   return torch.utils.data.DataLoader(
       dataset,
       batch_size=batchsize,
