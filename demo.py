@@ -162,7 +162,7 @@ def train_model(
     "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
     "CE": CrossEntropyLoss(),
   }
-  net = nns[nns]
+  net = neural_network_structures[nns]
   loss_fn = loss_fns[loss]
 
   optimizers = {
