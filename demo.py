@@ -121,7 +121,6 @@ def get_data_loader(data, split, batchsize, transform):
       dataset,
       batch_size=batchsize,
       sampler=sampler,
-      shuffle=True,
       num_workers=0)
 
 def get_transform(mode):
