@@ -55,7 +55,7 @@ class DataSet(torch.utils.data.Dataset):
 def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
   for e in range(epochs):
     net.train()
-    for (data, targets, index) in enumerate(train_loader):
+    for idx, (data, targets, index) in enumerate(train_loader):
       #print("data[0].shape: " + str(data[0].shape))
       #exit()
       targets = targets.to(torch.float32)
