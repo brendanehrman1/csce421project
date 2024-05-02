@@ -12,7 +12,6 @@ from libauc.optimizers import PESG, PDSCA, SOAP, SOPA, SOPAs, SOTAs
 from libauc.sampler import DualSampler
 import medmnist
 from medmnist import INFO, Evaluator
-from torch.utils.data import Dataset
 
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
@@ -37,21 +36,21 @@ neural_network_structures = {
 }
 
 
-# class DataSet(torch.utils.data.Dataset):
+class DataSet(torch.utils.data.Dataset):
 
-#   def __init__(self, inputs, targets, trans=None):
-#     self.x = inputs
-#     self.y = targets
-#     self.trans = trans
+  def __init__(self, inputs, targets, trans=None):
+    self.inputs = inputs
+    self.targets = targets
+    self.trans = trans
 
-#   def __len__(self):
-#     return self.x.size()[0]
+  def __len__(self):
+    return self.inputs.size()[0]
 
-#   def __getitem__(self, idx):
-#     if self.trans == None:
-#       return (self.x[idx], self.y[idx], idx)
-#     else:
-#       return (self.trans(self.x[idx]), self.y[idx])
+  def __getitem__(self, idx):
+    if self.trans == None:
+      return (self.inputs[idx], self.targets[idx], idx)
+    else:
+      return (self.trans(self.inputs[idx]), self.targets[idx])
       
 def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
   for e in range(epochs):
