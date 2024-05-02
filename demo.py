@@ -116,7 +116,7 @@ def get_data_loader(data, split, batchsize, transform):
   labels = torch.tensor(labels)
 
   dataset = DataSet(data, labels, trans=transform)
-  sampler = DualSampler(dataset, batchsize, 0.5)
+  sampler = DualSampler(dataset, batchsize, sampling_rate=0.5)
   return torch.utils.data.DataLoader(
       dataset,
       batch_size=batchsize,
