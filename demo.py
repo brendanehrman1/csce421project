@@ -54,11 +54,12 @@ class DataSet(torch.utils.data.Dataset):
 def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
   for e in range(epochs):
     net.train()
-    for data, targets, index in enumerate(train_loader):
+    index = 0
+    for data, targets in train_loader:
       #print("data[0].shape: " + str(data[0].shape))
       #exit()
       targets = targets.to(torch.float32)
-      data, targets, index = data.cuda(), targets.cuda(), index.cuda()
+      data, targets = data.cuda(), targets.cuda()
       logits = net(data)
       #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
       #print("preds:" + str(preds), flush=True)
@@ -70,6 +71,7 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
       optimizer.zero_grad()
       loss.backward()
       optimizer.step()
+      index += 1
     evaluate(net, test_loader, epoch=e)
 
 
