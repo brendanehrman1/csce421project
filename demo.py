@@ -9,6 +9,7 @@ from libauc.models import resnet18, resnet101, resnet152, resnet50, densenet121,
 from libauc.losses import AUCMLoss, CompositionalAUCLoss, AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss, CrossEntropyLoss
 from torch.optim import SGD
 from libauc.optimizers import PESG, PDSCA, SOAP, SOPA, SOPAs, SOTAs
+from libauc.sampler import DualSampler
 import medmnist
 from medmnist import INFO, Evaluator
 
@@ -54,12 +55,11 @@ class DataSet(torch.utils.data.Dataset):
 def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
   for e in range(epochs):
     net.train()
-    index = 0
-    for data, targets in train_loader:
+    for (data, targets, index) in enumerate(train_loader):
       #print("data[0].shape: " + str(data[0].shape))
       #exit()
       targets = targets.to(torch.float32)
-      data, targets = data.cuda(), targets.cuda()
+      data, targets, index = data.cuda(), targets.cuda(), index.cuda()
       logits = net(data)
       #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
       #print("preds:" + str(preds), flush=True)
@@ -71,7 +71,6 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
       optimizer.zero_grad()
       loss.backward()
       optimizer.step()
-      index += 1
     evaluate(net, test_loader, epoch=e)
 
 
@@ -117,9 +116,11 @@ def get_data_loader(data, split, batchsize, transform):
   labels = torch.tensor(labels)
 
   dataset = DataSet(data, labels, trans=transform)
+  sampler = DualSampler(dataset, batchsize, 0.5)
   return torch.utils.data.DataLoader(
       dataset,
       batch_size=batchsize,
+      sampler=sampler,
       shuffle=True,
       num_workers=0)
 
