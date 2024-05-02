@@ -12,7 +12,7 @@ from libauc.optimizers import PESG, PDSCA, SOAP, SOPA, SOPAs, SOTAs
 from libauc.sampler import DualSampler
 import medmnist
 from medmnist import INFO, Evaluator
-from torch.utils.data import DataSet
+from torch.utils.data import Dataset
 
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
