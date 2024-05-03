@@ -79,7 +79,7 @@ def evaluate(net, test_loader, epoch=-1):
   net.eval()
   score_list = list()
   label_list = list()
-  for data, targets in test_loader:
+  for data, targets, _ in test_loader:
     data, targets = data.cuda(), targets.cuda()
 
     score = net(data).detach().clone().cpu()
