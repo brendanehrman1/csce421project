@@ -175,14 +175,14 @@ def train_model(
 ):
   test_loader = get_data_loader(data, 'test', test_batchsize, get_transform(transform))
   train_loader = get_data_loader(data, 'train', train_batchsize, get_transform(transform))
-  # train_labels = get_data_labels(data, 'train')
+  train_labels = get_data_labels(data, 'train')
   loss_fns = {
     "AUCM": AUCMLoss(),
     "CAUC": CompositionalAUCLoss(),
-    # "AP": AveragePrecisionLoss(len(train_labels)),
-    # "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
-    # "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
-    # "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
+    "AP": AveragePrecisionLoss(len(train_labels)),
+    "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
+    "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
+    "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
     "CE": CrossEntropyLoss(),
   }
   net = neural_network_structures[nns]
@@ -201,30 +201,30 @@ def train_model(
         lr=lr,
         margin=margin
       ),
-      # "AP": SOAP(
-      #   net.parameters(),
-      #   loss_fn=loss_fns["AP"],
-      #   lr=lr,
-      #   margin=margin
-      # ),
-      # "pAUC_CVaR": SOPA(
-      #   net.parameters(),
-      #   loss_fn=loss_fns["pAUC_CVaR"],
-      #   lr=lr,
-      #   margin=margin
-      # ),
-      # "pAUC_DRO": SOPAs(
-      #   net.parameters(),
-      #   loss_fn=loss_fns["pAUC_DRO"],
-      #   lr=lr,
-      #   margin=margin
-      # ),
-      # "tpAUC_KL": SOTAs(
-      #   net.parameters(),
-      #   loss_fn=loss_fns["tpAUC_KL"],
-      #   lr=lr,
-      #   margin=margin
-      # ),
+      "AP": SOAP(
+        net.parameters(),
+        loss_fn=loss_fns["AP"],
+        lr=lr,
+        margin=margin
+      ),
+      "pAUC_CVaR": SOPA(
+        net.parameters(),
+        loss_fn=loss_fns["pAUC_CVaR"],
+        lr=lr,
+        margin=margin
+      ),
+      "pAUC_DRO": SOPAs(
+        net.parameters(),
+        loss_fn=loss_fns["pAUC_DRO"],
+        lr=lr,
+        margin=margin
+      ),
+      "tpAUC_KL": SOTAs(
+        net.parameters(),
+        loss_fn=loss_fns["tpAUC_KL"],
+        lr=lr,
+        margin=margin
+      ),
       "CE": SGD(
         net.parameters(),
         lr=lr
