@@ -50,12 +50,12 @@ class DataSet(torch.utils.data.Dataset):
     if self.trans == None:
       return (self.inputs[idx], self.targets[idx], idx)
     else:
-      return (self.trans(self.inputs[idx]), self.targets[idx])
+      return (self.trans(self.inputs[idx]), self.targets[idx], idx)
       
 def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
   for e in range(epochs):
     net.train()
-    for idx, (data, targets, index) in enumerate(train_loader):
+    for data, targets, index in train_loader:
       #print("data[0].shape: " + str(data[0].shape))
       #exit()
       targets = targets.to(torch.float32)
