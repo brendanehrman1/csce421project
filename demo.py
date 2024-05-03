@@ -241,7 +241,6 @@ def train_all():
   networks = [nns for nns in neural_network_structures]
   loss = ["CE", "AUCM", "CAUC"]
   transform = [i for i in range(5)]
-  data = ["breastmnist", "pneumoniamnist"]
 
   for i in tr_bs:
     model_path = f"saved_model/trainbatchsize_{i}"
@@ -261,10 +260,6 @@ def train_all():
   for i in transform:
     model_path = f"saved_model/transform_{i}"
     train_model(args.data, i, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
-  for i in data:
-    model_path = f"saved_model/data_{i}"
-    train_model(i, args.transform, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
-
 
 def main_worker():
   if args.mode == 0:
