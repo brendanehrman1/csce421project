@@ -142,7 +142,7 @@ def main_worker():
              lr=args.lr,
              margin=args.margin),
         "PDSCA":
-        PDSCA(net.parameters(), lr=0.1, momentum=0.9,)
+        PDSCA(net.parameters(), lr=0.1, momentum=0.9)
     }
 
     optimizer = optimizers[args.optimizer]
