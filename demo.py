@@ -117,11 +117,17 @@ def get_data_loader(data, split, batchsize, transform):
 
   dataset = DataSet(data, labels, trans=transform)
   sampler = DualSampler(dataset, batchsize, sampling_rate=0.5)
-  return torch.utils.data.DataLoader(
-      dataset,
-      batch_size=batchsize,
-      sampler=sampler,
-      num_workers=0)
+  if split == 'train':
+    return torch.utils.data.DataLoader(
+        dataset,
+        batch_size=batchsize,
+        sampler=sampler,
+        num_workers=0)
+  else:
+    return torch.utils.data.DataLoader(
+        dataset,
+        batch_size=batchsize,
+        num_workers=0)
 
 def get_transform(mode):
   mean = 0.5
