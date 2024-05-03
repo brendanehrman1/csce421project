@@ -165,6 +165,7 @@ def train_model(
   data,
   transform,
   loss,
+  weight_decay,
   nns,
   train_batchsize,
   test_batchsize,
@@ -193,41 +194,48 @@ def train_model(
         net.parameters(),
         loss_fn=loss_fns["AUCM"],
         lr=lr,
+        weight_decay=weight_decay,
         margin=margin
       ),
       "CAUC": PDSCA(
         net.parameters(),
         loss_fn=loss_fns["CAUC"],
         lr=lr,
+        weight_decay=weight_decay,
         margin=margin
       ),
       "AP": SOAP(
         net.parameters(),
         loss_fn=loss_fns["AP"],
         lr=lr,
+        weight_decay=weight_decay,
         margin=margin
       ),
       "pAUC_CVaR": SOPA(
         net.parameters(),
         loss_fn=loss_fns["pAUC_CVaR"],
         lr=lr,
+        weight_decay=weight_decay,
         margin=margin
       ),
       "pAUC_DRO": SOPAs(
         net.parameters(),
         loss_fn=loss_fns["pAUC_DRO"],
         lr=lr,
+        weight_decay=weight_decay,
         margin=margin
       ),
       "tpAUC_KL": SOTAs(
         net.parameters(),
         loss_fn=loss_fns["tpAUC_KL"],
         lr=lr,
+        weight_decay=weight_decay,
         margin=margin
       ),
       "CE": SGD(
         net.parameters(),
-        lr=lr
+        lr=lr,
+        weight_decay=weight_decay,
       ),
   }
 
@@ -244,34 +252,38 @@ def train_all():
   tr_bs = [8,16,32,64, 128]
   te_bs = [32, 64, 128, 256, 512]
   lr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
+  weight_decay = [0, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
   networks = [nns for nns in neural_network_structures]
-  loss = ["CE", "AUCM", "CAUC"]
+  loss = ["CE", "AUCM", "CAUC", "AP", "pAUC_CVaR", "pAUC_DRO", "tpAUC_KL"]
   transform = [i for i in range(5)]
   datas = ["breastmnist", "pneumoniamnist"]
 
   for data in datas:
     for i in tr_bs:
       model_path = f"saved_model/{data}_trainbatchsize_{i}"
-      train_model(data, args.transform, args.loss, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in te_bs:
       model_path = f"saved_model/{data}_testbatchsize_{i}"
-      train_model(data, args.transform, args.loss, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
     for i in lr:
       model_path = f"saved_model/{data}_learningrate_{i}"
-      train_model(data, args.transform, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
     for i in networks:
       model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
-      train_model(data, args.transform, args.loss, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.weight_decay, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in loss:
       model_path = f"saved_model/{data}_lossfunction_{i}"
-      train_model(data, args.transform, i, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, i, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+    for i in weight_decay:
+      model_path = f"saved_model/{data}_weightdecay_{i}"
+      train_model(data, args.transform, args.loss, i, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in transform:
       model_path = f"saved_model/{data}_transform_{i}"
-      train_model(data, i, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, i, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
 
 def main_worker():
   if args.mode == 0:
-    train_model(args.data, args.transform, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, args.saved_model_path)
+    train_model(args.data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, args.saved_model_path)
   elif args.mode == 1:
     eval_model(args.data, args.transform, args.nns, args.test_batchsize, args.saved_model_path)
   else:
