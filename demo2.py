@@ -97,7 +97,7 @@ def main_worker():
     from libauc.losses import AUCMLoss, CompositionalAUCLoss, AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss, PairwiseAUCLoss, meanAveragePrecisionLoss, ListwiseCELoss, NDCGLoss, GCLoss_v1, GCLoss_v2, MIDAM_attention_pooling_loss, MIDAM_softmax_pooling_loss, CrossEntropyLoss, FocalLoss
     from libauc.losses.surrogate import barrier_hinge_loss, hinge_loss, logistic_loss, squared_hinge_loss, squared_loss
     from torch.optim import SGD
-    from libauc.optimizers import PESG
+    from libauc.optimizers import PESG, PDSCA
 
     loss_fns = {
         "AUCM": AUCMLoss(),
