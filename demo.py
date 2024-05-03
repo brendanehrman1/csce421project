@@ -249,7 +249,7 @@ def train_model(
   torch.save(net.state_dict(), model_path)
 
 def train_all():
-  tr_bs = [8,16,32,64, 128]
+  tr_bs = [32, 64, 128] # [8,16,32,64, 128]
   te_bs = [32, 64, 128, 256, 512]
   lr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
   weight_decay = [0, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
