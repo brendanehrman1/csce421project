@@ -141,6 +141,8 @@ def main_worker():
              loss_fn=loss_fns[args.loss],
              lr=args.lr,
              margin=args.margin),
+        "PDSCA":
+        PDSCA(net.parameters(), lr=0.1, momentum=0.9,)
     }
 
     optimizer = optimizers[args.optimizer]
