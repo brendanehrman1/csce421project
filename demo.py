@@ -259,18 +259,18 @@ def train_all():
   datas = ["breastmnist", "pneumoniamnist"]
 
   for data in datas:
-    for i in tr_bs:
-      model_path = f"saved_model/{data}_trainbatchsize_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
-    for i in te_bs:
-      model_path = f"saved_model/{data}_testbatchsize_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
-    for i in lr:
-      model_path = f"saved_model/{data}_learningrate_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
-    for i in networks:
-      model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+    # for i in tr_bs:
+    #   model_path = f"saved_model/{data}_trainbatchsize_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+    # for i in te_bs:
+    #   model_path = f"saved_model/{data}_testbatchsize_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
+    # for i in lr:
+    #   model_path = f"saved_model/{data}_learningrate_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
+    # for i in networks:
+    #   model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in loss:
       model_path = f"saved_model/{data}_lossfunction_{i}"
       train_model(data, args.transform, i, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
