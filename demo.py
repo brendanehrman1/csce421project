@@ -246,22 +246,22 @@ def train_all():
   for data in datas:
     for i in tr_bs:
       model_path = f"saved_model/{data}_trainbatchsize_{i}"
-      train_model(args.data, args.transform, args.loss, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in te_bs:
       model_path = f"saved_model/{data}_testbatchsize_{i}"
-      train_model(args.data, args.transform, args.loss, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
     for i in lr:
       model_path = f"saved_model/{data}_learningrate_{i}"
-      train_model(args.data, args.transform, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
+      train_model(data, args.transform, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
     for i in networks:
       model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
-      train_model(args.data, args.transform, args.loss, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, args.loss, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in loss:
       model_path = f"saved_model/{data}_lossfunction_{i}"
-      train_model(args.data, args.transform, i, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, args.transform, i, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in transform:
       model_path = f"saved_model/{data}_transform_{i}"
-      train_model(args.data, i, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+      train_model(data, i, args.loss, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
 
 def main_worker():
   if args.mode == 0:
