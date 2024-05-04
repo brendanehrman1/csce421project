@@ -1,0 +1,59 @@
+CSCE 421
+Dr. Tianbao Yang
+Brendan Ehrman, Adam Burhanpurwala
+Instructions on using demo.py and arguments.py
+
+Arguments for running demo.py:
+usage: demo.py [-h] [--loss LOSS] [--train_batchsize TRAIN_BATCHSIZE] [--epochs EPOCHS] [--lr LR]
+               [--weight_decay WEIGHT_DECAY] [--margin MARGIN]
+               [--saved_model_path SAVED_MODEL_PATH] [--test_batchsize TEST_BATCHSIZE]
+               [--image_size IMAGE_SIZE] [--data DATA] [--server SERVER] [--pos_class POS_CLASS]
+               [--task_index TASK_INDEX] [--nns NNS] [--normalization NORMALIZATION] [--mode MODE]
+               [--transform TRANSFORM]
+
+This file will be split into four user intentions, correponding to the "--mode" argument.
+--------------------------------------------------------------------------------------
+1. Training Model (mode=0)
+To train a model, specify:
+- --data: Dataset name (e.g., "breastmnist")
+- --transform: Image transformation mode (0=none, 1=brighter, 2=darker, 3=more contrast, 4=less contrast)
+- --loss: Loss function type (e.g., "AUCM", "CAUC", "AP")
+- --weight_decay: Regularization parameter to help prevent overfitting (e.g., 0, 1e-5, 1e-4)
+- --nns: Neural network structure (e.g., "resnet18", "resnet101")
+- --train_batchsize: Size of the batch for training (e.g., 256, 512)
+- --test_batchsize: Size of the batch for testing (e.g., 1024, 2048)
+- --epochs: Number of training cycles (e.g., 1, 10)
+- --lr: Learning rate for the optimizer (e.g., 0.1, 0.01)
+- --margin: Margin for certain loss functions (e.g., 1.0, 0.5)
+- --saved_model_path: Path to save the trained model (e.g., "saved_model/test_model")
+
+--------------------------------------------------------------------------------------
+2. Evaluating Model (mode=1)
+To evaluate a trained model, specify:
+- --data: Dataset name
+- --transform: Image transformation mode
+- --nns: Neural network structure
+- --test_batchsize: Size of the batch for testing
+- --saved_model_path: Path where the trained model is saved
+
+--------------------------------------------------------------------------------------
+3. Batch Training Models (mode=2)
+Initiates training of models with various configurations systematically.
+
+--------------------------------------------------------------------------------------
+4. Batch Evaluating Models (mode=3)
+Systematically evaluates models across different configurations and prints AUCs.
+
+--------------------------------------------------------------------------------------
+Additional Argument Descriptions:
+- --transform: Controls the preprocessing of images. Mode 0 applies no transformation; Mode 1 increases brightness; Mode 2 decreases brightness; Mode 3 increases contrast; Mode 4 decreases contrast.
+- --loss: Specifies the type of loss function used for training, influencing how the model learns from the dataset.
+- --nns: Determines the architecture of the neural network used for training and evaluating.
+- --train_batchsize and --test_batchsize: Determine how many examples are processed at once during training and testing phases, respectively.
+- --epochs: Defines how many complete passes through the training dataset are made.
+- --lr (learning rate): Controls the step size at each iteration while moving toward a minimum of a loss function.
+- --weight_decay: Adds a penalty on the size of the coefficients to the loss function, aiding in controlling overfitting.
+- --margin: Used in certain loss functions to define the gap between positive and negative examples.
+- --saved_model_path: Specifies where the trained model files will be stored and where to load them from during evaluation.
+
+Ensure to adjust these parameters according to your specific project requirements and computational resources available.
