@@ -1,6 +1,4 @@
-import os
 import torch
-import torchvision
 from torchvision import transforms
 import numpy as np
 from arguments import args
@@ -11,7 +9,7 @@ from torch.optim import SGD
 from libauc.optimizers import PESG, PDSCA, SOAP, SOPA, SOPAs, SOTAs
 from libauc.sampler import DualSampler
 import medmnist
-from medmnist import INFO, Evaluator
+from medmnist import INFO
 
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
@@ -249,14 +247,14 @@ def train_model(
   torch.save(net.state_dict(), model_path)
 
 def train_all():
-  tr_bs = [64, 128, 256, 512, 1028] #[8,16,32,64, 128]
-  te_bs = [256, 512, 1024, 2048, 4096] #[32, 64, 128, 256, 512]
+  tr_bs = [8,16,32,64, 128, 256, 512, 1028]
+  te_bs = [32, 64, 128, 256, 512, 1024, 2048, 4096]
   lr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
   weight_decay = [0, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
   networks = [nns for nns in neural_network_structures]
   loss = ["CE", "AUCM", "CAUC", "AP", "pAUC_CVaR", "pAUC_DRO", "tpAUC_KL"]
   transform = [i for i in range(5)]
-  datas = ["pneumoniamnist"] # ["breastmnist", "pneumoniamnist"]
+  datas = ["breastmnist", "pneumoniamnist"]
 
   for data in datas:
     for i in tr_bs:
@@ -282,14 +280,14 @@ def train_all():
       train_model(data, i, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
 
 def eval_all():
-  tr_bs = [64, 128, 256, 512, 1028] #[8,16,32,64, 128]
-  te_bs = [256, 512, 1024, 2048, 4096] #[32, 64, 128, 256, 512]
+  tr_bs = [8,16,32,64, 128, 256, 512, 1028]
+  te_bs = [32, 64, 128, 256, 512, 1024, 2048, 4096]
   lr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
   weight_decay = [0, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
   networks = [nns for nns in neural_network_structures]
   loss = ["CE", "AUCM", "CAUC", "AP", "pAUC_CVaR", "pAUC_DRO", "tpAUC_KL"]
   transform = [i for i in range(5)]
-  datas = ["pneumoniamnist"] # ["breastmnist", "pneumoniamnist"]
+  datas = ["breastmnist", "pneumoniamnist"]
 
   for data in datas:
     for i in tr_bs:
