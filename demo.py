@@ -294,24 +294,31 @@ def eval_all():
   for data in datas:
     for i in tr_bs:
       model_path = f"saved_model/{data}_trainbatchsize_{i}"
+      print(model_path)
       eval_model(data, args.transform, args.nns, args.test_batchsize, model_path)
     for i in te_bs:
       model_path = f"saved_model/{data}_testbatchsize_{i}"
+      print(model_path)
       eval_model(data, args.transform, args.nns, i, model_path)
     for i in lr:
       model_path = f"saved_model/{data}_learningrate_{i}"
+      print(model_path)
       eval_model(data, args.transform, args.nns, args.test_batchsize, model_path)
     for i in networks:
       model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
+      print(model_path)
       eval_model(data, args.transform, i, args.test_batchsize, model_path)
     for i in loss:
       model_path = f"saved_model/{data}_lossfunction_{i}"
+      print(model_path)
       eval_model(data, args.transform, args.nns, args.test_batchsize, model_path)
     for i in weight_decay:
       model_path = f"saved_model/{data}_weightdecay_{i}"
+      print(model_path)
       eval_model(data, args.transform, args.nns, args.test_batchsize, model_path)
     for i in transform:
       model_path = f"saved_model/{data}_transform_{i}"
+      print(model_path)
       eval_model(data, i, args.nns, args.test_batchsize, model_path)
 
 def main_worker():
