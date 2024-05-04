@@ -21,13 +21,13 @@ np.random.seed(2024)
 idx_loss = [AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss]
 
 neural_network_structures = {
-    # "resnet18": resnet18(pretrained=False).cuda(),
-    # "resnet101": resnet101(pretrained=False).cuda(),
-    # "resnet152": resnet152(pretrained=False).cuda(),
-    # "resnet50": resnet50(pretrained=False).cuda(),
-    # "densenet121": densenet121(pretrained=False).cuda(),
-    # "densenet169": densenet169(pretrained=False).cuda(),
-    # "densenet201": densenet201(pretrained=False).cuda(),
+    "resnet18": resnet18(pretrained=False).cuda(),
+    "resnet101": resnet101(pretrained=False).cuda(),
+    "resnet152": resnet152(pretrained=False).cuda(),
+    "resnet50": resnet50(pretrained=False).cuda(),
+    "densenet121": densenet121(pretrained=False).cuda(),
+    "densenet169": densenet169(pretrained=False).cuda(),
+    "densenet201": densenet201(pretrained=False).cuda(),
     "densenet161": densenet161(pretrained=False).cuda(),
     "resnext101_32x8d": resnext101_32x8d(pretrained=False).cuda(),
     "resnext50_32x4d": resnext50_32x4d(pretrained=False).cuda(),
@@ -259,18 +259,18 @@ def train_all():
   datas = ["pneumoniamnist"] # ["breastmnist", "pneumoniamnist"]
 
   for data in datas:
-    for i in tr_bs:
-      model_path = f"saved_model/{data}_trainbatchsize_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
-    for i in te_bs:
-      model_path = f"saved_model/{data}_testbatchsize_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
-    for i in lr:
-      model_path = f"saved_model/{data}_learningrate_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
-    for i in networks:
-      model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
-      train_model(data, args.transform, args.loss, args.weight_decay, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+    # for i in tr_bs:
+    #   model_path = f"saved_model/{data}_trainbatchsize_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, args.nns, i, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
+    # for i in te_bs:
+    #   model_path = f"saved_model/{data}_testbatchsize_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, i, args.epochs, args.lr, args.margin, model_path)
+    # for i in lr:
+    #   model_path = f"saved_model/{data}_learningrate_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, i, args.margin, model_path)
+    # for i in networks:
+    #   model_path = f"saved_model/{data}_neuralnetworkstructure_{i}"
+    #   train_model(data, args.transform, args.loss, args.weight_decay, i, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
     for i in loss:
       model_path = f"saved_model/{data}_lossfunction_{i}"
       train_model(data, args.transform, i, args.weight_decay, args.nns, args.train_batchsize, args.test_batchsize, args.epochs, args.lr, args.margin, model_path)
