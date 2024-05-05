@@ -5,6 +5,7 @@ from torchvision import transforms
 import numpy as np
 from arguments import args
 from sklearn import metrics
+import matplotlib.pyplot as plt
 
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
@@ -184,7 +185,8 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
       index += 1
     evaluate(net, test_loader, epoch=e)
 
-
+auc_scores = []
+epoch_count = []
 def evaluate(net, test_loader, epoch=-1):
   # Testing AUC
   net.eval()
@@ -201,7 +203,14 @@ def evaluate(net, test_loader, epoch=-1):
 
   test_auc = metrics.roc_auc_score(test_label, test_score)
   print("Epoch:" + str(epoch) + "Test AUC: " + str(test_auc), flush=True)
+  auc_scores.append(test_auc)
+  epoch_count.append(epoch)
 
+plt.plot(epoch_count,auc_scores)
+plt.xlabel("Epoch Count")
+plt.ylabel("AUC Score")
+plt.title("Neural Network:",args.nns, " Step Size: ", args.lr)
+plt.show()
 
 if __name__ == "__main__":
   main_worker()
