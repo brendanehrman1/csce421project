@@ -1,3 +1,4 @@
+
 import os
 import torch
 import torchvision
@@ -97,38 +98,18 @@ def main_worker():
     from libauc.losses import AUCMLoss, CompositionalAUCLoss, AveragePrecisionLoss, pAUC_CVaR_Loss, pAUC_DRO_Loss, tpAUC_KL_Loss, PairwiseAUCLoss, meanAveragePrecisionLoss, ListwiseCELoss, NDCGLoss, GCLoss_v1, GCLoss_v2, MIDAM_attention_pooling_loss, MIDAM_softmax_pooling_loss, CrossEntropyLoss, FocalLoss
     from libauc.losses.surrogate import barrier_hinge_loss, hinge_loss, logistic_loss, squared_hinge_loss, squared_loss
     from torch.optim import SGD
-    from libauc.optimizers import PESG
+    from libauc.optimizers import PESG, PDSCA
 
     loss_fns = {
         "AUCM": AUCMLoss(),
         "CompositionalAUC": CompositionalAUCLoss(),
-        "AveragePrecision": AveragePrecisionLoss(len(train_labels)),
-        "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
-        "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
-        "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
-        "PairwiseAUC": PairwiseAUCLoss(),
-        "meanAveragePrecision": meanAveragePrecisionLoss(len(train_labels), 2),
-        "GC": GCLoss_v1(),
-        "GC_v2": GCLoss_v2(),
-        "MIDAM_attention_pooling": MIDAM_attention_pooling_loss(len(train_labels)),
-        "MIDAM_softmax_pooling": MIDAM_softmax_pooling_loss(len(train_labels)),
         "CE": CrossEntropyLoss(),
-        "Focal": FocalLoss(),
     }
 
     nns = {
         "resnet18": resnet18(pretrained=False).cuda(),
-        "resnet101": resnet101(pretrained=False).cuda(),
-        "resnet152": resnet152(pretrained=False).cuda(),
         "resnet50": resnet50(pretrained=False).cuda(),
-        "densenet121": densenet121(pretrained=False).cuda(),
-        "densenet169": densenet169(pretrained=False).cuda(),
-        "densenet201": densenet201(pretrained=False).cuda(),
-        "densenet161": densenet161(pretrained=False).cuda(),
-        "resnext101_32x8d": resnext101_32x8d(pretrained=False).cuda(),
-        "resnext50_32x4d": resnext50_32x4d(pretrained=False).cuda(),
         "wide_resnet101_2": wide_resnet101_2(pretrained=False).cuda(),
-        "wide_resnet50_2": wide_resnet50_2(pretrained=False).cuda()
     }
     net = nns[args.nns]
     loss_fn = loss_fns[args.loss]
@@ -141,6 +122,8 @@ def main_worker():
              loss_fn=loss_fns[args.loss],
              lr=args.lr,
              margin=args.margin),
+        "PDSCA":
+        PDSCA(net.parameters(), loss_fn=loss_fns[args.loss], lr=0.1, momentum=0.9)
     }
 
     optimizer = optimizers[args.optimizer]
@@ -163,15 +146,10 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
     net.train()
     index = 0
     for data, targets in train_loader:
-      #print("data[0].shape: " + str(data[0].shape))
-      #exit()
       targets = targets.to(torch.float32)
       data, targets = data.cuda(), targets.cuda()
       logits = net(data)
       preds = torch.flatten(torch.sigmoid(logits))
-      #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
-      #print("preds:" + str(preds), flush=True)
-      #print("targets:" + str(targets), flush=True)
       if args.loss == 'pAUC_CVaR':
         loss = loss_fn(preds, targets, index)
       else:
@@ -203,3 +181,4 @@ def evaluate(net, test_loader, epoch=-1):
 
 if __name__ == "__main__":
   main_worker()
+
