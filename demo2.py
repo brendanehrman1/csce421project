@@ -103,18 +103,7 @@ def main_worker():
     loss_fns = {
         "AUCM": AUCMLoss(),
         "CompositionalAUC": CompositionalAUCLoss(),
-        "AveragePrecision": AveragePrecisionLoss(len(train_labels)),
-        "pAUC_CVaR": pAUC_CVaR_Loss(len(train_labels), len([label for label in train_labels if label])),
-        "pAUC_DRO": pAUC_DRO_Loss(len(train_labels)),
-        "tpAUC_KL": tpAUC_KL_Loss(len(train_labels)),
-        "PairwiseAUC": PairwiseAUCLoss(),
-        "meanAveragePrecision": meanAveragePrecisionLoss(len(train_labels), 2),
-        "GC": GCLoss_v1(),
-        "GC_v2": GCLoss_v2(),
-        "MIDAM_attention_pooling": MIDAM_attention_pooling_loss(len(train_labels)),
-        "MIDAM_softmax_pooling": MIDAM_softmax_pooling_loss(len(train_labels)),
         "CE": CrossEntropyLoss(),
-        "Focal": FocalLoss(),
     }
 
     nns = {
@@ -157,15 +146,10 @@ def train(net, train_loader, test_loader, loss_fn, optimizer, epochs):
     net.train()
     index = 0
     for data, targets in train_loader:
-      #print("data[0].shape: " + str(data[0].shape))
-      #exit()
       targets = targets.to(torch.float32)
       data, targets = data.cuda(), targets.cuda()
       logits = net(data)
       preds = torch.flatten(torch.sigmoid(logits))
-      #print("torch.sigmoid(logits):" + str(torch.sigmoid(logits)), flush=True)
-      #print("preds:" + str(preds), flush=True)
-      #print("targets:" + str(targets), flush=True)
       if args.loss == 'pAUC_CVaR':
         loss = loss_fn(preds, targets, index)
       else:
