@@ -1,3 +1,4 @@
+
 import os
 import torch
 import torchvision
@@ -118,17 +119,8 @@ def main_worker():
 
     nns = {
         "resnet18": resnet18(pretrained=False).cuda(),
-        "resnet101": resnet101(pretrained=False).cuda(),
-        "resnet152": resnet152(pretrained=False).cuda(),
         "resnet50": resnet50(pretrained=False).cuda(),
-        "densenet121": densenet121(pretrained=False).cuda(),
-        "densenet169": densenet169(pretrained=False).cuda(),
-        "densenet201": densenet201(pretrained=False).cuda(),
-        "densenet161": densenet161(pretrained=False).cuda(),
-        "resnext101_32x8d": resnext101_32x8d(pretrained=False).cuda(),
-        "resnext50_32x4d": resnext50_32x4d(pretrained=False).cuda(),
         "wide_resnet101_2": wide_resnet101_2(pretrained=False).cuda(),
-        "wide_resnet50_2": wide_resnet50_2(pretrained=False).cuda()
     }
     net = nns[args.nns]
     loss_fn = loss_fns[args.loss]
@@ -205,3 +197,4 @@ def evaluate(net, test_loader, epoch=-1):
 
 if __name__ == "__main__":
   main_worker()
+
