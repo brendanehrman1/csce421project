@@ -4,6 +4,9 @@ Brendan Ehrman, Adam Burhanpurwala
 Instructions on using demo.py and arguments.py
 
 Arguments for running demo.py:
+pip install medmnist
+pip install -U libauc
+
 usage: demo.py [-h] [--loss LOSS] [--train_batchsize TRAIN_BATCHSIZE] [--epochs EPOCHS] [--lr LR]
                [--weight_decay WEIGHT_DECAY] [--margin MARGIN]
                [--saved_model_path SAVED_MODEL_PATH] [--test_batchsize TEST_BATCHSIZE]
